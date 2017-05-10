@@ -1,0 +1,105 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:component-scan base-package="cn.yiyizuche.**.**.**.controller">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	<!--配置controller映射数据转换策略，还可使用高级自定义方式(RequestMappingHandlerMapping\RequestMappingHandlerAdapter)但需先删除此项 -->
+	<!--<mvc:annotation-driven conversion-service="conversionService"/> -->
+	<!-- 自定义扩展属性数据类型转换扩展点 -->
+	<!--<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"> 
+		<property name="converters"> <set> <bean class="com.idp.pub.web.converters.StringToDateConverter"/> 
+		<bean class="com.idp.pub.web.converters.StringToDateTimeConverter"/> </set> 
+		</property> </bean> -->
+
+
+	<!-- change p:prefix="/" to p:prefix="/WEB-INF/jsp/" by Rush.D.Xzj -->
+	<!-- 声明一个jsp视图解析器. -->
+	<!-- p:viewClass="org.springframework.web.servlet.view.JstlView"  p:order="5" -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		 p:prefix="/" p:suffix=".jsp" />
+	<!-- 声明一个json\xml视图解析器.后续可追加扩展其它 -->
+	<bean name="xmlViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="location" value="/WEB-INF/spring-viewspace.xml"></property>
+		<property name="order" value="0"></property>
+	</bean>
+
+
+	<!--4.文件上传 配置 file upload -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<value>1048576000</value>
+		</property>
+		<property name="maxInMemorySize">
+			<value>40960</value>
+		</property>
+	</bean>
+
+	<!-- <bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				配置下载返回类型
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					配置编码方式
+					<property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
+				</bean>
+			</list>
+		</property>
+	</bean> -->
+
+
+	<!-- url访问权限访问控制拦截器 -->
+	<!--<mvc:interceptors> -->
+	<!--<mvc:interceptor> -->
+	<!--<mvc:mapping path="/*.shtml"/> -->
+	<!--<mvc:exclude-mapping path="/authentication.shtml"/> -->
+	<!--<bean class="cn.yiyizuche.common.interceptor.SessionInterceptor"/> -->
+	<!--</mvc:interceptor> -->
+	<!--</mvc:interceptors> -->
+
+	<!--避免ajax请求出现406错误    start-->
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false"/>
+		<property name="favorParameter" value="false"/>
+		<property name="ignoreAcceptHeader" value="false"/>
+		<property name="mediaTypes">
+			<value>
+				atom = application/atom+xml
+				html = text/html
+				json = application/json
+				* = */*
+			</value>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" >
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list><value>text/html;charset=UTF-8</value></list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!--避免ajax请求出现406错误    end-->
+</beans>

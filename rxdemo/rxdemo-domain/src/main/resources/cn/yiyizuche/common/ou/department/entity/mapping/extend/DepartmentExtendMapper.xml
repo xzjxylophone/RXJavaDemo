@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DepartmentMapper">
+	<resultMap id="BaseResultMapVo" type="cn.yiyizuche.common.ou.department.entity.DepartmentVo" >
+	   <id column="dep_id" property="id" jdbcType="INTEGER" />
+	    <result column="p_id" property="pId" jdbcType="INTEGER" />
+	    <result column="leader_id" property="leaderId" jdbcType="INTEGER" />
+	    <result column="supleader_id" property="supleaderId" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="short_name" property="shortName" jdbcType="VARCHAR" />
+	    <result column="punch_in" property="punchIn" jdbcType="VARCHAR" />
+	    <result column="punch_out" property="punchOut" jdbcType="VARCHAR" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="sort" property="sort" jdbcType="INTEGER" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="faild1" property="faild1" jdbcType="VARCHAR" />
+	    <result column="faild2" property="faild2" jdbcType="VARCHAR" />
+	    <result column="leaderName" property="leaderName" jdbcType="VARCHAR" />
+	    <result column="supLeaderName" property="supLeaderName" jdbcType="VARCHAR" />
+	    <result column="parentName" property="parentName" jdbcType="VARCHAR" />
+	  </resultMap>
+	  
+	  <select id="selectDepartmentVoById" resultMap="BaseResultMapVo" parameterType="int">
+	  	select 
+	  	d1.dep_id, d1.p_id, d1.leader_id, d1.supleader_id, d1.name, d1.short_name, d1.punch_in, 
+	  	d1.punch_out, d1.code,d1.create_user, d1.create_time, d1.update_user, d1.update_time, 
+	  	d1.sort, d1.remark,d1.faild1, d1.faild2, d2.name as parentName, u1.real_name as leaderName,
+	  	u2.real_name as supLeaderName
+    	from ou_department as d1 left join ou_department as d2  on d1.p_id=d2.dep_id
+		left join ou_user as u1 on  d1.leader_id=u1.user_id 
+		left join ou_user as u2 on d1.supleader_id=u2.user_id
+    	where   d1.dep_id=#{id}
+	  </select>
+	  
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+	</select>
+
+	<select id="selectByDepName" resultMap="BaseResultMap"
+		parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+		where name = #{depName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByCreateUserId" resultMap="BaseResultMap" parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+		where create_user = #{userId}
+	</select>
+	
+
+	<select id="selectByCode" resultMap="BaseResultMap"
+		parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+		where code = #{code,jdbcType=VARCHAR}
+	</select>
+<!-- ***************************************************************************************** 部门树形查询   stsrt ******************************************-->
+	<select id="selectByUpdateUserId" resultMap="BaseResultMap"
+		parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+		 <include refid="departmentTree" />
+	</select>
+
+ <!-- 树形查询 -->
+  <sql id="departmentTree">
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="pId != null ">
+        and FIND_IN_SET(dep_id, getDepartmentChildLst(#{pId,jdbcType=INTEGER}))
+      </if>
+    </trim>
+  </sql>
+<!-- ***************************************************************************************** 部门树形查询   end ******************************************-->
+
+
+	<select id="selectByPaerntDepId" resultMap="BaseResultMap"
+		parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from ou_department
+		where p_id = #{userId}
+	</select>
+
+	<select id="findChildListByParam"  resultMap="BaseResultMap" parameterType="java.util.Map">
+  	  select 
+  	  <include refid="Base_Column_List" />
+  	  from ou_department 
+  	  <include refid="departmentTreeExcludeParent" />
+	  order by sort, dep_id
+  	</select>
+  	
+  	<!-- 树形查询 ：排除父ID-->
+  <sql id="departmentTreeExcludeParent">
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="pId != null ">
+        and  FIND_IN_SET(dep_id, getDepartmentChildLst(#{pId,jdbcType=INTEGER}))
+        and dep_id != #{pId,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </sql>
+  
+  <select id="findPageListByPid" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from ou_department
+  	where   FIND_IN_SET(dep_id, getDepartmentChildLst(#{pId,jdbcType=INTEGER}))
+	<if test="pId != null ">
+	  and dep_id != #{pId,jdbcType=INTEGER}
+	</if>
+  	order by sort, dep_id asc
+  	limit #{offset},#{limit}
+  </select>
+  
+  <select id="findPageCountByPid" resultType="int" parameterType="java.util.Map">
+  	select count(1) from ou_department
+  	where   FIND_IN_SET(dep_id, getDepartmentChildLst(#{pId,jdbcType=INTEGER}))
+  </select>
+
+</mapper>

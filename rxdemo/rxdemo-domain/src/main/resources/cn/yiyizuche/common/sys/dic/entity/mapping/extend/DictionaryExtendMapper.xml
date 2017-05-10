@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DictionaryMapper" >
+  <!-- ***********************************************************************************分页查询 start************************************************ -->
+	<!-- 分页列表查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select d.dic_id,d.dic_name,d.dic_code,d.display_type,d.is_external,d.dic_status
+		from sys_dic d
+		<include refid="dynamicWhere" />
+		order by d.create_time desc
+		limit #{offset},#{limit}
+	</select>
+
+	<!-- 查询菜单列表个数 -->
+	<select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+		select count(1)
+		from sys_dic d
+		<include refid="dynamicWhere" />
+	</select>
+
+	<!-- 查询where条件 -->
+	<sql id="dynamicWhere">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="dicStatus != -1">
+				and d.dic_status = #{dicStatus,jdbcType=INTEGER}
+			</if>
+			<if test="dicName != null">
+				and d.dic_name LIKE CONCAT('%',#{dicName},'%')
+			</if>
+		</trim>
+	</sql>
+
+	<!-- ***********************************************************************************分页查询 end************************************************ -->
+	
+	
+	<!-- ***********************************************************************************查询同名数量 start************************************************ -->
+	<!-- 查询同名数量 -->
+	<select id="selectSameDicNameCount" parameterType="java.util.Map" resultType="int">
+		select COUNT(1) 
+		from sys_dic d
+		<include refid="sameNameCountSql" />
+	</select>
+	
+	<!-- 查询where条件 -->
+	<sql id="sameNameCountSql">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="dicName != null">
+				and d.dic_name = #{dicName,jdbcType=VARCHAR}
+			</if>
+			<if test="dicId != 0">
+				and d.dic_id != #{dicId,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</sql>
+	<!-- ***********************************************************************************查询同名数量 end************************************************ -->
+	
+	
+	<!-- 启用、禁用字典 -->
+	<update id="updateDicStatus" parameterType="java.util.Map">
+		update sys_dic s 
+		set s.dic_status = #{dicStatus,jdbcType=INTEGER}
+		where s.dic_id = #{dicId,jdbcType=INTEGER}
+	</update>
+</mapper>

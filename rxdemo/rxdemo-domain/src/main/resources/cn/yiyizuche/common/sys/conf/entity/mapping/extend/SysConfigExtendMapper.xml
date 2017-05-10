@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SysConfigMapper" >
+  
+
+  <select id="selectByConfigKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_conf
+    where conf_key = #{configKey,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="selectByConfigName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_conf
+    where conf_name = #{configName,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <!-- 分页列表查询 -->
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from sys_conf
+    <include refid="dynamicWhere" />
+    limit #{offset},#{limit}
+  </select>
+
+  <!-- 查询订单列表个数 -->
+  <select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+    select count(1)
+    from sys_conf
+    <include refid="dynamicWhere" />
+  </select>
+
+  <!-- 分页查询where条件  -->
+  <sql id="dynamicWhere">
+    <!-- 	LIKE 样例：   SYSTEM_NAME like '%'||#{systemName}||'%'    -->
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="configName != null and configName !=''">
+        and conf_name LIKE CONCAT('%',#{configName},'%')
+      </if>
+      <if test="configKey != null and configKey !=''">
+        and conf_key LIKE CONCAT('%',#{configKey},'%')
+      </if>
+    </trim>
+  </sql>
+  
+  
+  
+</mapper>

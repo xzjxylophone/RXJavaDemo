@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RoleMapper">
+
+
+
+
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_role
+  </select>
+
+	<select id="selectByRoleName" resultMap="BaseResultMap"
+		parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		from ou_role
+		where role_name = #{roleName,jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 分页列表查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from ou_role
+		<include refid="dynamicWhere" />
+		<include refid="dynamicOrderBy" />
+		limit #{offset},#{limit}
+	</select>
+
+	<!-- 查询订单列表个数 -->
+	<select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+		select count(1)
+		from ou_role
+		<include refid="dynamicWhere" />
+		<include refid="dynamicOrderBy" />
+	</select>
+
+	<!-- 分页查询where条件  -->
+	<sql id="dynamicWhere">
+		<!-- 	LIKE 样例：   SYSTEM_NAME like '%'||#{systemName}||'%'    -->
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="roleName != null and roleName !=''">
+				and role_name LIKE CONCAT('%',#{roleName},'%')
+			</if>
+			<if test="remark != null and remark !=''">
+				and remark LIKE CONCAT('%',#{remark},'%')
+			</if>
+			<if test="startTime != null and startTime !=''">
+				and create_time <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and endTime !=''">
+				and create_time <![CDATA[<=]]> #{endTime}
+			</if>
+		</trim>
+	</sql>
+
+	<!-- order by 排序   -->
+	<sql id="dynamicOrderBy">
+		<if test="orderBy!=null">
+			order by ${orderBy}
+			<if test="order!=null">
+				${order}
+			</if>
+		</if>
+	</sql>
+
+	<select id="selectByCreateUserId" resultMap="BaseResultMap"
+		parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from ou_role
+		where create_user = #{userId}
+	</select>
+
+
+	<select id="selectByUpdateUserId" resultMap="BaseResultMap"
+		parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from ou_role
+		where update_user = #{userId}
+	</select>
+
+</mapper>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DepartmentMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.ou.department.entity.Department" >
+    <id column="dep_id" property="id" jdbcType="INTEGER" />
+    <result column="p_id" property="pId" jdbcType="INTEGER" />
+    <result column="leader_id" property="leaderId" jdbcType="INTEGER" />
+    <result column="supleader_id" property="supleaderId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="short_name" property="shortName" jdbcType="VARCHAR" />
+    <result column="punch_in" property="punchIn" jdbcType="VARCHAR" />
+    <result column="punch_out" property="punchOut" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="faild1" property="faild1" jdbcType="VARCHAR" />
+    <result column="faild2" property="faild2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    dep_id, p_id, leader_id, supleader_id, name, short_name, punch_in, punch_out, code, 
+    create_user, create_time, update_user, update_time, sort, remark, faild1, faild2
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_department
+    where dep_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from ou_department
+    where dep_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.ou.department.entity.Department" useGeneratedKeys="true" keyProperty="id" >
+    insert into ou_department (p_id, leader_id, supleader_id, 
+      name, short_name, punch_in, 
+      punch_out, code, create_user, 
+      create_time, update_user, update_time, 
+      sort, remark, faild1, 
+      faild2)
+    values (#{pId,jdbcType=INTEGER}, #{leaderId,jdbcType=INTEGER}, #{supleaderId,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, #{punchIn,jdbcType=VARCHAR}, 
+      #{punchOut,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{faild1,jdbcType=VARCHAR}, 
+      #{faild2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.ou.department.entity.Department" useGeneratedKeys="true" keyProperty="id" >
+    insert into ou_department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      p_id,
+      leader_id,
+      supleader_id,
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="shortName != null" >
+        short_name,
+      </if>
+      <if test="punchIn != null" >
+        punch_in,
+      </if>
+      <if test="punchOut != null" >
+        punch_out,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      create_user,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      update_user,
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      sort,
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="faild1 != null" >
+        faild1,
+      </if>
+      <if test="faild2 != null" >
+        faild2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{pId,jdbcType=INTEGER},
+      #{leaderId,jdbcType=INTEGER},
+      #{supleaderId,jdbcType=INTEGER},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null" >
+        #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="punchIn != null" >
+        #{punchIn,jdbcType=VARCHAR},
+      </if>
+      <if test="punchOut != null" >
+        #{punchOut,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      #{createUser,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      #{updateUser,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      #{sort,jdbcType=INTEGER},
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="faild1 != null" >
+        #{faild1,jdbcType=VARCHAR},
+      </if>
+      <if test="faild2 != null" >
+        #{faild2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.yiyizuche.common.ou.department.entity.Department" >
+    update ou_department
+    <set >
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="leaderId != null" >
+        leader_id = #{leaderId,jdbcType=INTEGER},
+      </if>
+      <if test="supleaderId != null" >
+        supleader_id = #{supleaderId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null" >
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="punchIn != null" >
+        punch_in = #{punchIn,jdbcType=VARCHAR},
+      </if>
+      <if test="punchOut != null" >
+        punch_out = #{punchOut,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="faild1 != null" >
+        faild1 = #{faild1,jdbcType=VARCHAR},
+      </if>
+      <if test="faild2 != null" >
+        faild2 = #{faild2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dep_id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.yiyizuche.common.ou.department.entity.Department" >
+    update ou_department
+    set p_id = #{pId,jdbcType=INTEGER},
+      leader_id = #{leaderId,jdbcType=INTEGER},
+      supleader_id = #{supleaderId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      short_name = #{shortName,jdbcType=VARCHAR},
+      punch_in = #{punchIn,jdbcType=VARCHAR},
+      punch_out = #{punchOut,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      faild1 = #{faild1,jdbcType=VARCHAR},
+      faild2 = #{faild2,jdbcType=VARCHAR}
+    where dep_id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_department
+    where ${value}
+  </select>
+</mapper>

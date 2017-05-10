@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserMapper" >
+
+
+
+<resultMap id="BaseResultMapEmployeeVo" type="cn.yiyizuche.common.ou.user.entity.UserEmployeeVo" >
+    <id column="user_id" property="id" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="birthdate" property="birthdate" jdbcType="TIMESTAMP" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="field1" property="field1" jdbcType="VARCHAR" />
+    <result column="field2" property="field2" jdbcType="VARCHAR" />
+    <result column="field3" property="field3" jdbcType="VARCHAR" />
+    <result column="field4" property="field4" jdbcType="VARCHAR" />
+    <result column="field5" property="field5" jdbcType="VARCHAR" />
+    <result column="dep_id" property="depId" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="INTEGER" />
+    <result column="dep_name" property="depName" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+
+  <select id="selectAllUserEmployeeVo" resultMap="BaseResultMapEmployeeVo" >
+    select 
+	t1.user_id, t1.user_name, t1.real_name, t1.pwd, t1.sex, t1.birthdate, t1.mobile, t1.email, t1.status, t1.create_user, 
+    t1.create_time, t1.update_user, t1.update_time, t1.del_flag, t1.field1, t1.field2, t1.field3, t1.field4, 
+    t1.field5,
+    t2.emp_id,
+    t3.dep_id, t3.name as dep_name
+    from ou_user t1
+    left join ou_employee t2 on t1.user_id = t2.user_id
+    left join ou_department t3 on t2.dep_id = t3.dep_id
+    where t1.del_flag = 0 and t1.user_id != 1
+  </select>
+
+
+
+  
+  
+
+
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="String" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectUserListNotInEmployee" resultMap="BaseResultMap" parameterType="int" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_user where user_id != 1 and user_id not in (select user_id from ou_employee where emp_id != #{id,jdbcType=INTEGER});
+  </select>
+
+
+  <select id="selectByUserNameAndPwd" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_user
+    where user_name = #{userName,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR} and del_flag=0
+  </select>
+  
+  
+  
+  <update id="updatePwdByUserId" parameterType="java.util.Map" >
+    update ou_user
+    set pwd = #{pwd,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+   </update>
+
+  
+  <update id="updateUserStatusByUserId" parameterType="java.util.Map" >
+    update ou_user
+    set status = #{status,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+   </update>
+
+
+
+  <update id="deleteByUserId" parameterType="int" >
+    update ou_user
+    set del_flag = 1
+    where user_id = #{id,jdbcType=INTEGER}
+   </update>
+
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_user
+  </select>
+
+
+  <select id="selectAllWithDelFlag" resultMap="BaseResultMap" parameterType="int" >
+    select
+    <include refid="Base_Column_List" />
+    from ou_user
+    where del_flag = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 分页列表查询 -->
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from ou_user
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+    limit #{offset},#{limit}
+  </select>
+
+  <!-- 查询订单列表个数 -->
+  <select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+    select count(1)
+    from ou_user
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+  </select>
+
+  <!-- 分页查询where条件  -->
+  <sql id="dynamicWhere">
+    <!-- 	LIKE 样例：   SYSTEM_NAME like '%'||#{systemName}||'%'    -->
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="userName != null and userName !=''">
+        and user_name LIKE CONCAT('%',#{userName},'%')
+      </if>
+      <if test="realName != null and realName !=''">
+        and real_name LIKE CONCAT('%',#{realName},'%')
+      </if>
+      <if test="startTime != null and startTime !=''">
+        and create_time <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and endTime !=''">
+        and create_time <![CDATA[<=]]> #{endTime}
+      </if>
+      <if test="deleteFlag != null">
+        and del_flag = #{deleteFlag}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- order by 排序   -->
+  <sql id="dynamicOrderBy">
+    <if test="orderBy!=null">
+      order by ${orderBy}
+      <if test="order!=null">
+        ${order}
+      </if>
+    </if>
+  </sql>
+
+</mapper>

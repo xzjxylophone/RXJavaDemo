@@ -1,0 +1,32 @@
+.manage-tent .manage-structure{
+	width: 70%;
+	border: 1px solid #DCDDDD;
+	border-radius: 8px;
+	padding-bottom: 20px;
+}
+.manage-structure h2{
+	height: 42px;
+	line-height: 42px;
+	margin-top: 10px;
+	margin-left: 40px;
+	font-size: 20px;
+	font-weight: 600;
+}
+.manage-structure .manage-msg{
+	width: 296px;
+	margin-left: 30px;
+	margin-top: 10px;
+	border-left: 2px solid #ABB1B5;
+	
+}
+.manage-structure .manage-msg p{
+	height: 40px;
+	line-height: 20px;
+}
+.manage-structure .manage-msg i{
+	display: inline-block;
+	height: 2px;
+	width: 14px;
+	background-color: #ABB1B5;
+	margin-right: 10px;
+}

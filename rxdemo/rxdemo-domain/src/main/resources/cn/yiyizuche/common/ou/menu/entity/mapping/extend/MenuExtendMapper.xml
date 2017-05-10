@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MenuMapper" >
+
+  <sql id="column_List" >
+    menu_id, p_id, name, create_user, create_time, update_user, update_time, url, remark
+  </sql>
+  
+  <!-- 批量删除菜单列表 -->
+  <delete id="deleteByIds" parameterType="list" >
+      delete from ou_menu where menu_id in
+        <foreach collection="list" item="ids"  open="(" separator="," close=")">  
+            #{ids}
+         </foreach>
+  </delete>
+  
+  <!-- 查询所有启用菜单 -->
+  <select id="updateMenuList"  resultMap="BaseResultMap" parameterType="int" statementType="CALLABLE">
+  	<![CDATA[
+    {call pro_show_menuchildLst(#{pid,jdbcType=INTEGER})}
+  ]]>
+  
+  </select>
+  
+   <select id="findMenuChildListByParam"  resultMap="BaseResultMap" parameterType="java.util.Map">
+  	  select 
+  	  <include refid="Base_Column_List" />
+  	  from ou_menu 
+  	  <include refid="menuTree" />
+       order by sort, menu_id
+  </select>
+  
+  
+   <select id="findMenuPageByPid"  resultMap="BaseResultMap" parameterType="java.util.Map">
+  	  select 
+  	  <include refid="Base_Column_List" />
+  	  from ou_menu 
+  	  <include refid="dynamicWhere" />
+      <include refid="dynamicOrderBy" />
+   	   limit #{offset},#{limit}
+  </select>
+  
+   <select id="findMenuPageCountByPid"  resultType="int" parameterType="java.util.Map">
+  	  select count(1)
+  	  from ou_menu 
+  	  <include refid="dynamicWhere" />
+      <include refid="dynamicOrderBy" />
+  </select>
+  
+  
+  
+   <!-- 分页列表查询 -->
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from ou_menu
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+    limit #{offset},#{limit}
+  </select>
+
+  <!-- 查询菜单列表个数 -->
+  <select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+    select count(1)
+    from ou_menu
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+  </select>
+  
+  <!-- 树形查询 -->
+  <sql id="menuTree">
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="pId != null">
+        and FIND_IN_SET(menu_id, getMenuChildLst(#{pId,jdbcType=INTEGER}))
+        and menu_id != #{pId,jdbcType=INTEGER}
+      </if>
+      <if test="status != null">
+        and status = #{status,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </sql>
+  
+  
+   <!-- 查询where条件  -->
+  <sql id="dynamicWhere">
+    <!-- 	LIKE 样例：   SYSTEM_NAME like '%'||#{systemName}||'%'    -->
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="pId != null and pId !=''">
+        and p_id = #{pId,jdbcType=INTEGER}
+      </if>
+      <if test="name != null and name !=''">
+        and user_name LIKE CONCAT('%',#{name},'%')
+      </if>
+      <if test="status != null and status !=''">
+        and status = #{status,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- order by 排序   -->
+  <sql id="dynamicOrderBy">
+    <if test="orderBy!=null">
+      order by ${orderBy}
+      <if test="order!=null">
+        ${order}
+      </if>
+    </if>
+  </sql>
+  
+<!-- 批量更新菜单 -->
+<update id="updateMenuStatus" parameterType="list" >
+    UPDATE ou_menu SET update_user = #{list[0].updateUser} ,update_time=#{list[0].updateTime},status=#{list[0].status}
+    WHERE menu_id IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item.id}
+    </foreach>
+</update>
+
+
+<!-- 根据菜单父id查询子菜单列表 -->
+<select id="selectMenuListByPid" parameterType="int" resultMap="BaseResultMap">
+	select 
+	<include refid="column_List" />
+  	from ou_menu where menu_id = #{pid,jdbcType=INTEGER} or p_id = #{pid,jdbcType=INTEGER}
+</select>
+
+  <!-- 根据菜单名称查询同名菜单个数 -->
+  <select id="countMenuByMenuName"  resultMap="BaseResultMap" parameterType="string">
+  	  select 
+  	  <include refid="column_List" />
+  	  from ou_menu where name = #{name}
+  </select>
+  
+    <!-- 根据菜单code查询同code菜单个数 -->
+  <select id="countMenuByMenuCode"  resultMap="BaseResultMap" parameterType="string">
+  	  select 
+  	  <include refid="column_List" />
+  	  from ou_menu where code = #{code}
+  </select>
+  
+  <!-- 根据菜单id数组查询菜单列表 -->
+  <select id="selectMenuListByMenuIds" parameterType="Integer[]" resultMap="BaseResultMap">
+  	select 
+  	<include refid="column_List" />
+  	from ou_menu
+  	where menu_id
+  	<foreach  collection="array" item="menuId" open="in (" close=")" separator=",">   
+            #{menuId,jdbcType=INTEGER}  
+    </foreach>  
+  </select>
+  
+</mapper>

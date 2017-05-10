@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RoleMenuMapper" >
+  <sql id="Base_Column_List" >
+    role_id, menu_id
+  </sql>
+  
+  <!-- 保存角色与菜单的关联关系 -->
+<insert id="saveAuthority" parameterType="java.util.List" >
+    insert into ou_role_menu (role_id, menu_id) values 
+    	<foreach collection="list" item="roleMenu" index="index" separator=",">
+    		( #{roleMenu.roleId,jdbcType=INTEGER}, #{roleMenu.menuId,jdbcType=INTEGER} )
+    	</foreach>
+ </insert>
+ 
+ <!-- 根据角色Id删除角色与菜单的关联关系 -->
+<delete id="deleteRelationByRoleId" parameterType="int">
+	delete from ou_role_menu where role_id = #{roleId,jdbcType=INTEGER}
+</delete>
+
+<!-- 根据角色Id数组查询角色与菜单的关联关系 -->
+<select id="selectRelationByRoleIds" parameterType="Integer[]" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List" />
+	from ou_role_menu where role_id
+	<foreach  collection="array" item="roleId" open="in (" close=")" separator=",">   
+            #{roleId,jdbcType=INTEGER}  
+    </foreach>  
+</select>
+
+<!-- 根据角色Id查询角色与菜单的关联关系 -->
+<select id="selectRelationByRoleId" parameterType="int" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List" />
+	from ou_role_menu where role_id =  #{roleId,jdbcType=INTEGER} 
+</select>
+
+<!-- 根据菜单Id查询角色与菜单的关联关系 -->
+<select id="selectRelationByMenuId" parameterType="int" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List" />
+	from ou_role_menu where menu_id = #{menuId,jdbcType=INTEGER}
+</select>
+
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DicItemMapper" >
+	<!-- 根据字典id删除字典项 -->
+  <delete id="deleteByDicId" parameterType="int">
+  	 delete from sys_dic_item
+    where dic_id = #{dicId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 启用、禁用字典项 -->
+  <update id="updateDicItemStatus" parameterType="java.util.Map">
+  		update sys_dic_item s 
+		set s.item_status = #{itemStatus,jdbcType=INTEGER}
+		where s.item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据字典id查询字典项集合 -->
+  <select id="selectDicItemListByDicId" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select d.item_id,d.dic_id,d.item_name,d.item_code
+	from sys_dic_item d
+	where d.dic_id =  #{dicId,jdbcType=INTEGER}
+	and d.item_status  = #{itemStatus,jdbcType=INTEGER} 
+  </select>
+  
+  <!-- ***********************************************************************************分页查询 start************************************************ -->
+	<!-- 分页列表查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select d.item_id,d.dic_id,d.item_name,d.item_code,d.item_status,d.item_sort
+		from sys_dic_item d
+		<include refid="dynamicWhere" />
+		order by d.item_sort
+		limit #{offset},#{limit}
+	</select>
+
+	<!-- 查询菜单列表个数 -->
+	<select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+		select count(1)
+		from sys_dic_item d
+		<include refid="dynamicWhere" />
+	</select>
+
+	<!-- 查询where条件 -->
+	<sql id="dynamicWhere">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="itemStatus != -1">
+				and d.item_status = #{itemStatus,jdbcType=INTEGER}
+			</if>
+			<if test="dicId != null">
+				and d.dic_id = #{dicId,jdbcType=INTEGER}
+			</if>
+			<if test="itemName != null">
+				and d.item_name LIKE CONCAT('%',#{itemName},'%')
+			</if> 
+		</trim>
+	</sql>
+
+	<!-- ***********************************************************************************分页查询 end************************************************ -->
+	
+	<!-- ***********************************************************************************查询同一字典下同名的字典项数量 start************************************************ -->
+	<!-- 查询同名数量 -->
+	<select id="selectSameDicItemNameCount" parameterType="java.util.Map" resultType="int">
+		select COUNT(1) 
+		from sys_dic_item d
+		<include refid="sameNameCountSql" />
+	</select>
+	
+	<!-- 查询where条件 -->
+	<sql id="sameNameCountSql">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="itemName != null">
+				and d.item_name = #{itemName,jdbcType=VARCHAR}
+			</if>
+			<if test="itemId != 0">
+				and d.item_id != #{itemId,jdbcType=INTEGER}
+			</if>
+			<if test="dicId != null">
+				and d.dic_id = #{dicId,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</sql>
+	<!-- ***********************************************************************************查询同一字典下同名的字典项数量 end************************************************ -->
+	
+</mapper>

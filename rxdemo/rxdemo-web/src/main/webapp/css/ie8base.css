@@ -1,0 +1,9 @@
+iframe{
+	allowTransparency: true;
+	height:1000px;
+	width: 100%;
+	frameborder:no;
+}
+iframe body{
+	background-color: transparent;
+}

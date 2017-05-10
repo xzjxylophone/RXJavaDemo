@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DicItemMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.sys.dic.entity.DicItem" >
+    <id column="item_id" property="id" jdbcType="INTEGER" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="dic_id" property="dicId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="item_status" property="itemStatus" jdbcType="INTEGER" />
+    <result column="item_sort" property="itemSort" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    item_id, item_code, dic_id, item_name, item_status, item_sort, create_user, create_time, 
+    update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dic_item
+    where item_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from sys_dic_item
+    where item_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.sys.dic.entity.DicItem" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_dic_item (item_code, dic_id, item_name, 
+      item_status, item_sort, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{itemCode,jdbcType=VARCHAR}, #{dicId,jdbcType=INTEGER}, #{itemName,jdbcType=VARCHAR}, 
+      #{itemStatus,jdbcType=INTEGER}, #{itemSort,jdbcType=INTEGER}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.sys.dic.entity.DicItem" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_dic_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemCode != null" >
+        item_code,
+      </if>
+      dic_id,
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      item_status,
+      item_sort,
+      create_user,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      update_user,
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemCode != null" >
+        #{itemCode,jdbcType=VARCHAR},
+      </if>
+      #{dicId,jdbcType=INTEGER},
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      #{itemStatus,jdbcType=INTEGER},
+      #{itemSort,jdbcType=INTEGER},
+      #{createUser,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      #{updateUser,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.yiyizuche.common.sys.dic.entity.DicItem" >
+    update sys_dic_item
+    <set >
+      <if test="itemCode != null" >
+        item_code = #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicId != null" >
+        dic_id = #{dicId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemStatus != null" >
+        item_status = #{itemStatus,jdbcType=INTEGER},
+      </if>
+      <if test="itemSort != null" >
+        item_sort = #{itemSort,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.yiyizuche.common.sys.dic.entity.DicItem" >
+    update sys_dic_item
+    set item_code = #{itemCode,jdbcType=VARCHAR},
+      dic_id = #{dicId,jdbcType=INTEGER},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      item_status = #{itemStatus,jdbcType=INTEGER},
+      item_sort = #{itemSort,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where item_id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dic_item
+    where ${value}
+  </select>
+</mapper>

@@ -1,0 +1,28 @@
+.manage-tent .manage-nav2-left{
+	width: 18%;
+	border: 1px solid #f4f4f4;
+	font-size: 14px;
+	float: left;
+}
+.index_active_ul li a{
+	padding-left: 20px;
+}
+.menu-none{
+	display: none;
+}
+
+.manage-tent .manage-nav2-right{
+	float: right;
+	width: 78%;
+	font-size: 12px;
+	/*border: 1px solid #f4f4f4;*/
+	padding: 20px;
+}
+.menu-main{
+	width: 100%;
+	
+}
+.manage-active{
+	/*background-color: #4BA6BF;*/
+	color: #fff;
+}

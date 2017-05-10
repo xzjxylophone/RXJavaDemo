@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SysConfigMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.sys.conf.entity.SysConfig" >
+    <id column="conf_id" property="id" jdbcType="INTEGER" />
+    <result column="conf_name" property="confName" jdbcType="VARCHAR" />
+    <result column="conf_type" property="confType" jdbcType="INTEGER" />
+    <result column="conf_key" property="confKey" jdbcType="VARCHAR" />
+    <result column="conf_value" property="confValue" jdbcType="VARCHAR" />
+    <result column="conf_desc" property="confDesc" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    conf_id, conf_name, conf_type, conf_key, conf_value, conf_desc, create_user, create_time, 
+    update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_conf
+    where conf_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from sys_conf
+    where conf_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.sys.conf.entity.SysConfig" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_conf (conf_name, conf_type, conf_key, 
+      conf_value, conf_desc, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{confName,jdbcType=VARCHAR}, #{confType,jdbcType=INTEGER}, #{confKey,jdbcType=VARCHAR}, 
+      #{confValue,jdbcType=VARCHAR}, #{confDesc,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.sys.conf.entity.SysConfig" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_conf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="confName != null" >
+        conf_name,
+      </if>
+      conf_type,
+      <if test="confKey != null" >
+        conf_key,
+      </if>
+      <if test="confValue != null" >
+        conf_value,
+      </if>
+      <if test="confDesc != null" >
+        conf_desc,
+      </if>
+      create_user,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      update_user,
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="confName != null" >
+        #{confName,jdbcType=VARCHAR},
+      </if>
+      #{confType,jdbcType=INTEGER},
+      <if test="confKey != null" >
+        #{confKey,jdbcType=VARCHAR},
+      </if>
+      <if test="confValue != null" >
+        #{confValue,jdbcType=VARCHAR},
+      </if>
+      <if test="confDesc != null" >
+        #{confDesc,jdbcType=VARCHAR},
+      </if>
+      #{createUser,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      #{updateUser,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.yiyizuche.common.sys.conf.entity.SysConfig" >
+    update sys_conf
+    <set >
+      <if test="confName != null" >
+        conf_name = #{confName,jdbcType=VARCHAR},
+      </if>
+      <if test="confType != null" >
+        conf_type = #{confType,jdbcType=INTEGER},
+      </if>
+      <if test="confKey != null" >
+        conf_key = #{confKey,jdbcType=VARCHAR},
+      </if>
+      <if test="confValue != null" >
+        conf_value = #{confValue,jdbcType=VARCHAR},
+      </if>
+      <if test="confDesc != null" >
+        conf_desc = #{confDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where conf_id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.yiyizuche.common.sys.conf.entity.SysConfig" >
+    update sys_conf
+    set conf_name = #{confName,jdbcType=VARCHAR},
+      conf_type = #{confType,jdbcType=INTEGER},
+      conf_key = #{confKey,jdbcType=VARCHAR},
+      conf_value = #{confValue,jdbcType=VARCHAR},
+      conf_desc = #{confDesc,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where conf_id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_conf
+    where ${value}
+  </select>
+</mapper>

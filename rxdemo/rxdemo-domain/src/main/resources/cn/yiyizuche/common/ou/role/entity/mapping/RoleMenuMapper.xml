@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RoleMenuMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.ou.role.entity.RoleMenuKey" >
+    <id column="role_id" property="roleId" jdbcType="INTEGER" />
+    <id column="menu_id" property="menuId" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="cn.yiyizuche.common.ou.role.entity.RoleMenuKey" >
+    delete from ou_role_menu
+    where role_id = #{roleId,jdbcType=INTEGER}
+      and menu_id = #{menuId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.ou.role.entity.RoleMenuKey" >
+    insert into ou_role_menu (role_id, menu_id)
+    values (#{roleId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.ou.role.entity.RoleMenuKey" >
+    insert into ou_role_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      role_id,
+      menu_id,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{roleId,jdbcType=INTEGER},
+      #{menuId,jdbcType=INTEGER},
+    </trim>
+  </insert>
+</mapper>

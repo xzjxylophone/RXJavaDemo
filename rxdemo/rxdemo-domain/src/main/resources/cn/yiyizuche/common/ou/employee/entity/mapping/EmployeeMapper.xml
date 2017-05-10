@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="EmployeeMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.ou.employee.entity.Employee" >
+    <id column="emp_id" property="id" jdbcType="INTEGER" />
+    <result column="dep_id" property="depId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="job_number" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="entry_time" property="entryTime" jdbcType="TIMESTAMP" />
+    <result column="work_time" property="workTime" jdbcType="TIMESTAMP" />
+    <result column="duty" property="duty" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="register" property="register" jdbcType="VARCHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="field1" property="field1" jdbcType="VARCHAR" />
+    <result column="field2" property="field2" jdbcType="VARCHAR" />
+    <result column="field3" property="field3" jdbcType="VARCHAR" />
+    <result column="field4" property="field4" jdbcType="VARCHAR" />
+    <result column="field5" property="field5" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    emp_id, dep_id, user_id, job_number, entry_time, work_time, duty, status, address, 
+    register, id_number, create_user, create_time, update_user, update_time, del_flag, 
+    field1, field2, field3, field4, field5
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_employee
+    where emp_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from ou_employee
+    where emp_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.ou.employee.entity.Employee" useGeneratedKeys="true" keyProperty="id" >
+    insert into ou_employee (dep_id, user_id, job_number, 
+      entry_time, work_time, duty, 
+      status, address, register, 
+      id_number, create_user, create_time, 
+      update_user, update_time, del_flag, 
+      field1, field2, field3, 
+      field4, field5)
+    values (#{depId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{jobNumber,jdbcType=VARCHAR}, 
+      #{entryTime,jdbcType=TIMESTAMP}, #{workTime,jdbcType=TIMESTAMP}, #{duty,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{register,jdbcType=VARCHAR}, 
+      #{idNumber,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=INTEGER}, 
+      #{field1,jdbcType=VARCHAR}, #{field2,jdbcType=VARCHAR}, #{field3,jdbcType=VARCHAR}, 
+      #{field4,jdbcType=VARCHAR}, #{field5,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.ou.employee.entity.Employee" useGeneratedKeys="true" keyProperty="id" >
+    insert into ou_employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      dep_id,
+      user_id,
+      <if test="jobNumber != null" >
+        job_number,
+      </if>
+      <if test="entryTime != null" >
+        entry_time,
+      </if>
+      <if test="workTime != null" >
+        work_time,
+      </if>
+      <if test="duty != null" >
+        duty,
+      </if>
+      status,
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="register != null" >
+        register,
+      </if>
+      <if test="idNumber != null" >
+        id_number,
+      </if>
+      create_user,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      update_user,
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      del_flag,
+      <if test="field1 != null" >
+        field1,
+      </if>
+      <if test="field2 != null" >
+        field2,
+      </if>
+      <if test="field3 != null" >
+        field3,
+      </if>
+      <if test="field4 != null" >
+        field4,
+      </if>
+      <if test="field5 != null" >
+        field5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{depId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER},
+      <if test="jobNumber != null" >
+        #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="entryTime != null" >
+        #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workTime != null" >
+        #{workTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duty != null" >
+        #{duty,jdbcType=VARCHAR},
+      </if>
+      #{status,jdbcType=INTEGER},
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="register != null" >
+        #{register,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      #{createUser,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      #{updateUser,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      #{delFlag,jdbcType=INTEGER},
+      <if test="field1 != null" >
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null" >
+        #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="field5 != null" >
+        #{field5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.yiyizuche.common.ou.employee.entity.Employee" >
+    update ou_employee
+    <set >
+      <if test="depId != null" >
+        dep_id = #{depId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="jobNumber != null" >
+        job_number = #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="entryTime != null" >
+        entry_time = #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workTime != null" >
+        work_time = #{workTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duty != null" >
+        duty = #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="register != null" >
+        register = #{register,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        id_number = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="field1 != null" >
+        field1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        field2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        field3 = #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null" >
+        field4 = #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="field5 != null" >
+        field5 = #{field5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where emp_id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.yiyizuche.common.ou.employee.entity.Employee" >
+    update ou_employee
+    set dep_id = #{depId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      job_number = #{jobNumber,jdbcType=VARCHAR},
+      entry_time = #{entryTime,jdbcType=TIMESTAMP},
+      work_time = #{workTime,jdbcType=TIMESTAMP},
+      duty = #{duty,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      register = #{register,jdbcType=VARCHAR},
+      id_number = #{idNumber,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      field1 = #{field1,jdbcType=VARCHAR},
+      field2 = #{field2,jdbcType=VARCHAR},
+      field3 = #{field3,jdbcType=VARCHAR},
+      field4 = #{field4,jdbcType=VARCHAR},
+      field5 = #{field5,jdbcType=VARCHAR}
+    where emp_id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_employee
+    where ${value}
+  </select>
+</mapper>

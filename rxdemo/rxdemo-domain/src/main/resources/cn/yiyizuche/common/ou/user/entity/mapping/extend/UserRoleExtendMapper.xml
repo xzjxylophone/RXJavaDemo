@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserRoleMapper" >
+
+
+<resultMap id="BaseResultMapVo" type="cn.yiyizuche.common.ou.user.entity.UserRoleVo" >
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="exist" property="exist" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="dep_id" property="depId" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="INTEGER" />
+    <result column="dep_name" property="depName" jdbcType="VARCHAR" />
+  </resultMap>
+
+<sql id="Base_Column_List" >
+    user_id, role_id
+  </sql>
+
+  
+    <select id="selectUserRole" resultMap="BaseResultMap" parameterType="cn.yiyizuche.common.ou.user.entity.UserRoleKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_user_role where user_id = #{userId,jdbcType=INTEGER} and role_id = #{roleId,jdbcType=INTEGER}
+  	</select>
+  
+    <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_user_role
+  	</select>
+  	
+  	<select id="selectUserRoleListByUserId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_user_role
+    where user_id = #{id,jdbcType=INTEGER}
+  	</select>
+ 
+  	
+  	
+  	<select id="selectUserRoleListByRoleId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_user_role
+    where role_id = #{id,jdbcType=INTEGER}
+  	</select>
+  	
+  	
+  	<select id="selectUserRoleVoListByRoleId" resultMap="BaseResultMapVo" parameterType="int" >
+    select 
+    t1.user_id, t1.role_id, 1 as exist,
+    t2.user_name, t2.real_name,
+    t3.role_name,
+    t4.emp_id,
+    t5.dep_id, t5.name as dep_name
+    from ou_user_role t1
+    left join ou_user t2 on t1.user_id = t2.user_id
+    left join ou_role t3 on t1.role_id = t3.role_id
+    left join ou_employee t4 on t1.user_id = t4.user_id
+    left join ou_department t5 on t4.dep_id = t5.dep_id
+    where t1.role_id = #{id,jdbcType=INTEGER}
+  	</select>
+  	
+  	<select id="selectUserRoleVoListByUserId" resultMap="BaseResultMapVo" parameterType="int" >
+    select 
+    t1.user_id, t1.role_id, 1 as exist,
+    t2.user_name, t2.real_name,
+    t3.role_name,
+    t4.emp_id,
+    t5.dep_id, t5.name as dep_name
+    from ou_user_role t1
+    left join ou_user t2 on t1.user_id = t2.user_id
+    left join ou_role t3 on t1.role_id = t3.role_id
+    left join ou_employee t4 on t1.user_id = t4.user_id
+    left join ou_department t5 on t4.dep_id = t5.dep_id
+    where t1.user_id = #{id,jdbcType=INTEGER}
+  	</select>
+
+
+
+</mapper>

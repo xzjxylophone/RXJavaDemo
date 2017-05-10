@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DictionaryMapper" >
+  <resultMap id="BaseResultMap" type="cn.yiyizuche.common.sys.dic.entity.Dictionary" >
+    <id column="dic_id" property="id" jdbcType="INTEGER" />
+    <result column="dic_name" property="dicName" jdbcType="VARCHAR" />
+    <result column="dic_code" property="dicCode" jdbcType="VARCHAR" />
+    <result column="display_type" property="displayType" jdbcType="INTEGER" />
+    <result column="is_external" property="isExternal" jdbcType="INTEGER" />
+    <result column="dic_table_code" property="dicTableCode" jdbcType="VARCHAR" />
+    <result column="dic_code_field" property="dicCodeField" jdbcType="VARCHAR" />
+    <result column="dic_name_field" property="dicNameField" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="dic_status" property="dicStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    dic_id, dic_name, dic_code, display_type, is_external, dic_table_code, dic_code_field, 
+    dic_name_field, create_user, create_time, update_user, update_time, dic_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dic
+    where dic_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from sys_dic
+    where dic_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.yiyizuche.common.sys.dic.entity.Dictionary" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_dic (dic_name, dic_code, display_type, 
+      is_external, dic_table_code, dic_code_field, 
+      dic_name_field, create_user, create_time, 
+      update_user, update_time, dic_status
+      )
+    values (#{dicName,jdbcType=VARCHAR}, #{dicCode,jdbcType=VARCHAR}, #{displayType,jdbcType=INTEGER}, 
+      #{isExternal,jdbcType=INTEGER}, #{dicTableCode,jdbcType=VARCHAR}, #{dicCodeField,jdbcType=VARCHAR}, 
+      #{dicNameField,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{dicStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.yiyizuche.common.sys.dic.entity.Dictionary" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_dic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dicName != null" >
+        dic_name,
+      </if>
+      <if test="dicCode != null" >
+        dic_code,
+      </if>
+      display_type,
+      is_external,
+      <if test="dicTableCode != null" >
+        dic_table_code,
+      </if>
+      <if test="dicCodeField != null" >
+        dic_code_field,
+      </if>
+      <if test="dicNameField != null" >
+        dic_name_field,
+      </if>
+      create_user,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      update_user,
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      dic_status,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dicName != null" >
+        #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      #{displayType,jdbcType=INTEGER},
+      #{isExternal,jdbcType=INTEGER},
+      <if test="dicTableCode != null" >
+        #{dicTableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCodeField != null" >
+        #{dicCodeField,jdbcType=VARCHAR},
+      </if>
+      <if test="dicNameField != null" >
+        #{dicNameField,jdbcType=VARCHAR},
+      </if>
+      #{createUser,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      #{updateUser,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      #{dicStatus,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.yiyizuche.common.sys.dic.entity.Dictionary" >
+    update sys_dic
+    <set >
+      <if test="dicName != null" >
+        dic_name = #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        dic_code = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="displayType != null" >
+        display_type = #{displayType,jdbcType=INTEGER},
+      </if>
+      <if test="isExternal != null" >
+        is_external = #{isExternal,jdbcType=INTEGER},
+      </if>
+      <if test="dicTableCode != null" >
+        dic_table_code = #{dicTableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCodeField != null" >
+        dic_code_field = #{dicCodeField,jdbcType=VARCHAR},
+      </if>
+      <if test="dicNameField != null" >
+        dic_name_field = #{dicNameField,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dicStatus != null" >
+        dic_status = #{dicStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where dic_id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.yiyizuche.common.sys.dic.entity.Dictionary" >
+    update sys_dic
+    set dic_name = #{dicName,jdbcType=VARCHAR},
+      dic_code = #{dicCode,jdbcType=VARCHAR},
+      display_type = #{displayType,jdbcType=INTEGER},
+      is_external = #{isExternal,jdbcType=INTEGER},
+      dic_table_code = #{dicTableCode,jdbcType=VARCHAR},
+      dic_code_field = #{dicCodeField,jdbcType=VARCHAR},
+      dic_name_field = #{dicNameField,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      dic_status = #{dicStatus,jdbcType=INTEGER}
+    where dic_id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dic
+    where ${value}
+  </select>
+</mapper>

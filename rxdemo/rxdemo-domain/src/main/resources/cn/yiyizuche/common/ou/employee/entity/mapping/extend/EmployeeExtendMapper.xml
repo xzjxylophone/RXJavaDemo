@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="EmployeeMapper" >
+
+
+<resultMap id="BaseResultMapVo" type="cn.yiyizuche.common.ou.employee.entity.EmployeeVo" >
+    <id column="emp_id" property="id" jdbcType="INTEGER" />
+    <result column="dep_id" property="depId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="job_number" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="entry_time" property="entryTime" jdbcType="TIMESTAMP" />
+    <result column="work_time" property="workTime" jdbcType="TIMESTAMP" />
+    <result column="duty" property="duty" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="register" property="register" jdbcType="VARCHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="field1" property="field1" jdbcType="VARCHAR" />
+    <result column="field2" property="field2" jdbcType="VARCHAR" />
+    <result column="field3" property="field3" jdbcType="VARCHAR" />
+    <result column="field4" property="field4" jdbcType="VARCHAR" />
+    <result column="field5" property="field5" jdbcType="VARCHAR" />
+    <result column="dep_name" property="depName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="real_name" property="userRealName" jdbcType="VARCHAR" />
+    <result column="birthdate" property="birthdate" jdbcType="TIMESTAMP" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="leader_id" property="leaderId" jdbcType="INTEGER" /><!-- 部门负责人id -->
+    <result column="supleader_id" property="supleaderId" jdbcType="INTEGER" /><!-- 主管领导id -->
+  </resultMap>
+
+	<!-- 根据员工id删除员工信息 -->
+  <update id="deleteById" parameterType="int">
+  	update ou_employee set del_flag = 1 where emp_id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据员工id集合删除员工信息 -->
+  <update id="deleteByIds" parameterType="list">
+  	update ou_employee set del_flag = 1 where where emo_id in 
+  		<foreach collection="list" item="ids"  open="(" separator="," close=")">  
+            #{ids}
+         </foreach>
+  </update>
+  
+  
+  <!-- t1 是员工表,  t2 是用户表  t3 是部门表 -->
+  <sql id="Base_Column_List_Vo" >
+    t1.emp_id, t1.dep_id, t1.user_id, t1.job_number, t1.entry_time, t1.duty, t1.status, t1.address, t1.register, 
+    t1.id_number, t1.create_user, t1.create_time, t1.update_user, t1.update_time, t1.del_flag, t1.field1, 
+    t1.field2, t1.field3, t1.field4, t1.field5, t1.work_time,
+    t2.user_name, t2.real_name, t2.birthdate, t2.email, t2.mobile, t2.sex,
+    t3.name dep_name,t3.leader_id,t3.supleader_id
+  </sql>
+  <sql id="From_Table_Join_Vo">
+    from ou_employee t1
+    left join ou_user t2 on t1.user_id = t2.user_id
+    left join ou_department t3 on t1.dep_id = t3.dep_id
+  </sql>
+  
+  <!-- 根据部门id查询员工列表 -->
+  <select id="selectEmpVoByDepId" resultMap="BaseResultMapVo" parameterType="int">
+  	select
+	<include refid="Base_Column_List_Vo" />
+	<include refid="From_Table_Join_Vo" />
+    where t1.dep_id = #{depId,jdbcType=INTEGER} and t2.del_flag = 0 and t2.status = 0
+  </select>
+  
+  
+  <select id="selectEmployeeByJobNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select
+	<include refid="Base_Column_List" />
+	from ou_employee
+    where job_number = #{job_number,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  <!-- 根据部门id及用户Id查询除本人外的员工列表 -->
+  <select id="selectEmpVoByParam" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+  	select
+	<include refid="Base_Column_List_Vo" />
+	<include refid="From_Table_Join_Vo" />
+    where t1.dep_id = #{depId,jdbcType=INTEGER} and t2.del_flag = 0 and t2.status = 0
+          and t2.user_id !=  #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <update id="updateEmployeeStatusByEmployeeId" parameterType="java.util.Map" >
+    update ou_employee
+    set status = #{status,jdbcType=INTEGER}
+    where emp_id = #{id,jdbcType=INTEGER}
+   </update>
+  
+  <select id="selectEmployeeVoByUserId" resultMap="BaseResultMapVo" parameterType="int">
+  	select
+	<include refid="Base_Column_List_Vo" />
+    	<include refid="From_Table_Join_Vo" />
+    	where t1.user_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="loadAllEmployeeVo" resultMap="BaseResultMapVo" parameterType="String">
+  	select t2.user_id, t2.real_name, t3.name dep_name 
+  	from ou_user as t2 
+  	left join  ou_employee as t1 on  t1.user_id = t2.user_id
+  	left join  ou_department t3 on t1.dep_id = t3.dep_id
+  	where t2.del_flag=0 and t2.status = 0 and t2.user_id != 1
+  </select>
+  
+  
+  
+  <select id="selectEmployeeVoByEmployeeId" resultMap="BaseResultMapVo" parameterType="int">
+  	select
+	<include refid="Base_Column_List_Vo" />
+    	<include refid="From_Table_Join_Vo" />
+    	where t1.emp_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectEmployeeVoByPage" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+  	select
+	<include refid="Base_Column_List_Vo" />
+    	<include refid="From_Table_Join_Vo" />
+    <include refid="dynamicVoWhere" />
+    <include refid="dynamicVoOrderBy" />
+    limit #{offset},#{limit}
+  </select>
+  
+  <select id="selectEmployeeVoByPageCount" resultType="int" parameterType="java.util.Map">
+    select count(1)
+    	<include refid="From_Table_Join_Vo" />
+    <include refid="dynamicVoWhere" />
+    <include refid="dynamicVoOrderBy" />
+  </select>
+  
+  
+  <!-- 分页查询where条件  -->
+  <sql id="dynamicVoWhere">
+    <!-- 	LIKE 样例：   SYSTEM_NAME like '%'||#{systemName}||'%'    -->
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="userName != null and userName !=''">
+        and t2.user_name LIKE CONCAT('%',#{userName},'%')
+      </if>
+      <if test="realName != null and realName !=''">
+        and t2.real_name LIKE CONCAT('%',#{realName},'%')
+      </if>
+      
+      <if test="depId != null">
+        and t3.dep_id = #{depId}
+      </if>
+      
+      <if test="startTime != null and startTime !=''">
+        and t1.create_time <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and endTime !=''">
+        and t1.create_time <![CDATA[<=]]> #{endTime}
+      </if>
+      	and t2.del_flag = 0 and t2.user_id != 1
+      
+    </trim>
+  </sql>
+
+  <!-- order by 排序   -->
+  <sql id="dynamicVoOrderBy">
+    <if test="orderBy!=null">
+      order by ${orderBy}
+      <if test="order!=null">
+        ${order}
+      </if>
+    </if>
+  </sql>
+  
+  
+  
+  
+  
+  
+  
+  <!-- 根据部门id查询员工列表 -->
+  <select id="selectEmpByDepId" resultMap="BaseResultMap" parameterType="int">
+  	select
+    <include refid="Base_Column_List" />
+    from ou_employee where dep_id = #{depId,jdbcType=INTEGER} and  del_flag = 0
+  </select>
+
+  <!-- 根据用户id查询员工 -->
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from ou_employee
+    where user_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 查询未分配部门的员工列表 -->
+  <select id="selectEmpNotInDep" resultMap="BaseResultMap">
+  	select
+    <include refid="Base_Column_List" />
+    from ou_employee where dep_id = 1 and  del_flag = 0
+  </select>
+  
+    <!-- 为部门分配员工 -->
+  <update id="updateEmpForDep" parameterType="java.util.Map">
+  		update ou_employee set dep_id = #{depId} where emp_id in
+  		<foreach collection="empIds" index="index" item="empId" open="(" separator="," close=")">
+       		 #{empId}
+   		</foreach>
+  </update>
+  
+  <!-- 分页查询员工信息 -->
+  <select id="selectEmployeeByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from ou_employee
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+    limit #{offset},#{limit}
+  </select>
+   <!-- 查询菜单列表个数 -->
+  <select id="selectByPageCount" resultType="int" parameterType="java.util.Map">
+    select count(1)
+    from ou_employee
+    <include refid="dynamicWhere" />
+    <include refid="dynamicOrderBy" />
+  </select>
+  <!-- 查询where条件  -->
+  <sql id="dynamicWhere">
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="depId != null and depId !=''">
+        and dep_id = #{depId,jdbcType=INTEGER}
+      </if>
+      <if test="jobNum != null and jobNum !=''">
+        and job_number LIKE CONCAT('%',#{jobNum},'%')
+      </if>
+      and del_flag = 0
+    </trim>
+  </sql>
+
+  <!-- order by 排序   -->
+  <sql id="dynamicOrderBy">
+    <if test="orderBy!=null">
+      order by ${orderBy}
+      <if test="order!=null">
+        ${order}
+      </if>
+    </if>
+  </sql>
+
+  <!-- 查询所有的员工信息 -->
+  <select id="selectAllEmp" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ou_employee where del_flag = 0
+    and job_number is not NULL and job_number != ''
+  </select>
+  
+</mapper>
